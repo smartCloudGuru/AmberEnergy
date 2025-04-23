@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>52.0</apiVersion>
+    <description>Case Manager</description>
+    <isExposed>true</isExposed>
+    <masterLabel>Case Manager</masterLabel>
+    <targets>
+        <target>lightning__AppPage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage">
+            <property name="filters" type="String" default="OwnerId = '00G0J0000039a65UAA' AND RecordTypeId = '0120J000000R33JQAS' AND IsClosed = false" label="Case List Query Filter"/>
+            <property name="orderBy" type="String" default="CreatedDate ASC" label="Case List Order By"/>
+            <property name="limit" type="String" default="25" label="Case List Limit"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

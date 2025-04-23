@@ -1,0 +1,18 @@
+/**
+ * Created by ukaya01 on 9/20/2021.
+ */
+.emailMessage{
+    border-bottom: 1px solid var(--lwc-colorBorder,rgb(221, 219, 218));
+}
+
+.defaultRow{
+
+}
+
+.modifiedRow{
+    background-color: rgb(255, 251, 229) !important;
+}
+
+.colorBrand{
+    color: var(--lwc-brandTextLink,rgb(1, 118, 211));
+}

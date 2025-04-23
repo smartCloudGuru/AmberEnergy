@@ -1,0 +1,97 @@
+<!--
+ - Created by ukaya01 on 2/25/2021.
+ -->
+
+<!-- Issue Notes Import -->
+<template>
+
+    <div class="mainContainer">
+
+        <div data-id="spinnerId" class="slds-spinner_container" if:true={showSpinner}>
+            <div class="slds-spinner slds-spinner_medium" role="status">
+                <span class="slds-assistive-text"></span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+
+        <lightning-layout multiple-rows=true>
+
+            <lightning-layout-item size=12 class="">
+                <lightning-card title="Before you import your data..." icon-name="action:info">
+                    <div class="slds-var-m-around_medium">
+                        <p>- Clean up your data import file to avoid duplicates</p>
+                        <p class="slds-var-m-vertical_medium">- Make sure the order of your columns match the columns on the provided template</p>
+                        <p>- Don't import too many records at once (up to 1000 records per import)</p>
+                    </div>
+
+                    <div slot="footer" class="footer">
+                        <div class="description"><slot></slot></div>
+                        <p>
+                            <a class="slds-text-link" href={templateUrl} target="source">Download CSV Template</a>
+                        </p>
+                    </div>
+                </lightning-card>
+            </lightning-layout-item>
+
+            <lightning-layout-item size=12 class="slds-p-vertical_small">
+                <lightning-card title="Choose Data to Import" icon-name="action:upload">
+                    <div class="slds-var-m-around_medium">
+                        <p>Drag or choose the CSV file and click Start Import</p>
+                        <lightning-input type="file"
+                                         label=""
+                                         accept=".csv"
+                                         onchange={handleFilesChange}>
+                        </lightning-input>
+
+                        <div class="slds-text-body_small slds-text-color_error slds-p-top_small">
+                            {fileName}
+                        </div>
+                    </div>
+
+                    <div slot="footer" class="footer">
+                        <lightning-button
+                                variant="brand"
+                                label="Start Import"
+                                title="Start Import"
+                                onclick={handleStartImport}
+                                disabled={isImportButtonDisabled}>
+                        </lightning-button>
+                    </div>
+                </lightning-card>
+            </lightning-layout-item>
+
+            <template if:true={displayImportResult}>
+                <lightning-layout-item size=12 class="">
+                    <lightning-card title="Import Status" icon-name={importIcon}>
+                        <div class="progressBar slds-var-m-around_medium">
+                            <lightning-progress-bar value={progress} variant="circular" size="large"></lightning-progress-bar>
+                        </div>
+
+                        <div class="slds-var-m-around_medium">
+                            <p class="slds-var-m-vertical_medium">{importResult.recordCount} of {totalRecordSize} rows were processed:</p>
+                            <p>- Notes created: {importResult.successCount}</p>
+                            <p class="slds-var-m-vertical_medium">- No open issue found for the given meter reference: {importResult.missingIssueCount}</p>
+                            <p>- More than one open issue found the given meter reference: {importResult.multipleIssueCount}</p>
+                            <p if:true={systemErrorsExist}>- System Errors: {importResult.systemErrorCount}</p>
+                        </div>
+
+                        <div slot="footer" class="footer">
+                            <div class="description"><slot></slot></div>
+                            <p if:true={isProgressing}>
+                                ...
+                            </p>
+                            <p if:false={isProgressing}>
+                                <a class="slds-text-link" onclick={downloadCsv} target="source">Download results</a>
+                            </p>
+                        </div>
+                    </lightning-card>
+                </lightning-layout-item>
+            </template>
+
+
+        </lightning-layout>
+
+    </div>
+
+</template>

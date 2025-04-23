@@ -1,0 +1,45 @@
+<template>
+        <lightning-combobox
+            name="dataFlowType"
+            label="Dataflow Type"
+            value={selectedOption}
+            onchange={handleOptionChange}
+            options={overallOptions}>
+        </lightning-combobox>
+        <template if:true={showPicklistOptions.overallOptions}>
+            <template if:true={selectedRecipe}>
+                <lightning-combobox
+                    name="Recipe"
+                    label="Recipe"
+                    value={selectedValues.recipe}
+                    onchange={handleOptionChange}
+                    options={recipeOptions}>
+                </lightning-combobox>
+            </template>
+        
+            <template if:true={selectedDataflow}>
+                <lightning-combobox
+                    name="Dataflow"
+                    label="Dataflow"
+                    value={selectedValues.dataflow}
+                    onchange={handleOptionChange}
+                    options={dataflowOptions}>
+                </lightning-combobox>
+            </template>
+    
+            <template if:true={selectedDataConnector}>
+                <lightning-combobox
+                    name="Data Connector"
+                    label="Data Connector"
+                    value={selectedValues.dataConnector}
+                    onchange={handleOptionChange}
+                    options={dataConnectorOptions}>
+                </lightning-combobox>
+            </template>
+        </template>
+    
+        <template if:true={showPicklistOptions.fallback}>
+            <lightning-input type="text" label="DataflowId" value={selectedValues.dataFlowId} onchange={handleOptionChange}></lightning-input>
+            <lightning-input type="text" label="Data flow Name" value={selectedValues.dataFlowName} onchange={handleOptionChange}></lightning-input>
+        </template>
+    </template>

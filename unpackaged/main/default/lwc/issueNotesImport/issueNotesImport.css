@@ -1,0 +1,28 @@
+/**
+ * Created by ukaya01 on 2/25/2021.
+ */
+
+.mainContainer{
+
+}
+
+.footer {
+    text-align: left;
+    font-size: 12px;
+}
+
+.description {
+    color: #706e6b;
+}
+
+.slds-page-header {
+    padding: 20px !important;
+}
+
+:host .slds-page-header{
+    padding: 20px !important;
+}
+
+.progressBar{
+    width: 50% !important;
+}

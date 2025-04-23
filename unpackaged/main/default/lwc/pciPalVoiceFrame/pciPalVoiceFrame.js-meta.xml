@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>52.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="participantType" type="String" description="Type of Transfer (contactType)"/>
+            <property name="participantId" type="String" description="PCIPal Transfer Flow ID (Agent or Queue ID)"/>
+            <property name="acessToken" type="String" description="PCIPal Access Token"/>
+            <property name="refreshToken" type="String" description="PCIPal Access Token Refresh"/>
+            <property name="redirectUrl" type="String" description="PCIPal URL"/>
+            <property name="voiceCallID" type="String" description="Voice Call Record  URL"/>
+        </targetConfig>
+    </targetConfigs>
+    <capabilities>
+        <capability>lightning__ServiceCloudVoiceToolkitApi</capability>
+      </capabilities>
+</LightningComponentBundle>

@@ -1,0 +1,279 @@
+<!--
+ - Created by ukaya01 on 9/20/2021.
+ -->
+
+<!-- Case Manager -->
+<template>
+
+    <div class="mainContainer">
+
+        <div data-id="spinnerId" class="slds-spinner_container" if:false={isLoaded}>
+            <div class="slds-spinner slds-spinner_medium" role="status">
+                <span class="slds-assistive-text"></span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+
+        <lightning-card>
+
+            <lightning-button-icon icon-name="utility:refresh" slot="actions" onclick={handleRefresh}></lightning-button-icon>
+            <lightning-button
+                    label={toggleSaveLabel}
+                    icon-name="utility:save"
+                    slot="actions"
+                    onclick={handleSave}>
+            </lightning-button>
+
+            <div class="slds-p-around_x-small" if:true={isLoaded}>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                    <tr class="">
+                        <th class="slds-size_1-of-12" scope="col">
+                            <div class="slds-truncate" title="Ticket ID">Ticket ID</div>
+                        </th>
+                        <th class="slds-size_1-of-12" scope="col">
+                            <div class="slds-truncate" title="Subject">Subject</div>
+                        </th>
+                        <th class="slds-size_1-of-12" scope="col">
+                            <div class="slds-truncate " title="Case Owner">
+                                Case Owner
+                                <abbr title="required" class="slds-required">*</abbr>
+                            </div>
+                        </th>
+                        <th class="slds-size_1-of-12" scope="col">
+                            <div class="slds-truncate" title="Open Date">Open Date</div>
+                        </th>
+                        <th class="slds-size_1-of-12" scope="col">
+                            <div class="slds-truncate" title="Status">Status</div>
+                        </th>
+                        <th class="slds-size_1-of-12" scope="col">
+                            <div class="slds-truncate" title="Contact">Contact Name</div>
+                        </th>
+                        <th class="slds-size_1-of-12" scope="col">
+                            <div class="slds-truncate" title="Web Email">Web Email</div>
+                        </th>
+                        <th class="slds-size_1-of-12" scope="col">
+                            <div class="slds-truncate" title="Correspondence">Correspondence</div>
+                        </th>
+                        <th class="slds-size_1-of-12" scope="col">
+                            <div class="slds-truncate " title="Case Reason">
+                                Case Reason
+                                <abbr title="required" class="slds-required">*</abbr>
+                            </div>
+                        </th>
+                        <th class="slds-size_1-of-12" scope="col">
+                            <div class="slds-truncate" title="Priority">Priority</div>
+                        </th>
+                        <th class="slds-size_1-of-12" scope="col">
+                            <div class="slds-truncate " title="Landlord or Resident">
+                                Landlord or Resident
+                                <abbr title="required" class="slds-required">*</abbr>
+                            </div>
+                        </th>
+                        <th class="slds-size_1-of-12" scope="col">
+                            <div class="slds-truncate " title="Site">
+                                Site
+                                <abbr title="required" class="slds-required">*</abbr>
+                            </div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template for:each = {caseList} for:item="item" for:index="indexVar">
+                        <tr key={item.key} class={item.rowStyle}>
+                            <td class="slds-size_1-of-12" data-label="Ticket Number">
+                                <div  title="Ticket Number">
+                                    <lightning-formatted-url value={item.recordUrl} label={item.CaseNumber} target="_self" ></lightning-formatted-url>
+                                </div>
+                            </td>
+                            <td class="slds-size_1-of-12" data-label="Subject">
+                                <div  title="Subject">
+                                        <lightning-input key={item.key} data-id={item.Id} name="input1" label="Subject" value={item.Subject} variant="label-hidden" onchange={handleSubjectChange}></lightning-input>
+                                </div>
+                            </td>
+                            <td class="slds-size_1-of-12" data-label="Case Owner">
+                                <div title="Case Owner">
+                                    <c-dynamic-multi-lookup
+                                            unique-key={item.Id}
+                                            selection={item.InitialSelectionOwner}
+                                            errors={errors}
+                                            onsearch={handleSearchOwner}
+                                            onselectionchange={handleLookupOwnerSelectionChange}
+                                            placeholder="Search Salesforce"
+                                            is-multi-entry={isMultiEntry}
+                                            new-record-options={newRecordOptions}
+                                            name={item.Id}>
+                                    </c-dynamic-multi-lookup>
+                                </div>
+                            </td>
+                            <td class="slds-size_1-of-12" data-label="Open Date">
+                                <div title="Open Date">
+                                    <lightning-formatted-date-time value={item.CreatedDate} year="numeric" month="short" day="2-digit"
+                                                                   hour="2-digit" minute="2-digit">
+                                    </lightning-formatted-date-time>
+                                </div>
+                            </td>
+                            <td class="slds-size_1-of-12" data-label="Status">
+                                <div title="Status">
+                                    <c-dynamic-picklist
+                                            unique-key={item.Id}
+                                            object-api-name="Case"
+                                            record-type-id="0120J000000R33JQAS"
+                                            selected-value={item.Status}
+                                            pick-list-field-api-name="Status"
+                                            variant="label-hidden"
+                                            onpicklistchange={handlePicklistChange}
+                                            name="Status">
+                                    </c-dynamic-picklist>
+                                </div>
+                            </td>
+                            <td class="slds-size_1-of-12" data-label="Contact">
+                                <div title="Contact">
+                                    <c-dynamic-multi-lookup
+                                            unique-key={item.Id}
+                                            selection={item.InitialSelectionContact}
+                                            errors={errors}
+                                            onsearch={handleSearchContact}
+                                            onselectionchange={handleLookupContactSelectionChange}
+                                            placeholder="Search Contacts"
+                                            is-multi-entry={isMultiEntry}
+                                            new-record-options={newRecordOptions}
+                                            name={item.Id}>
+                                    </c-dynamic-multi-lookup>
+                                </div>
+                            </td>
+                            <td class="slds-size_1-of-12" data-label="Web Email">
+                                <div title="Web Email">
+                                    <lightning-input key={item.key} data-id={item.Id} name="input1" label="Web Email" value={item.SuppliedEmail} variant="label-hidden" onchange={handleEmailChange}></lightning-input>
+                                </div>
+                            </td>
+                            <td class="slds-size_1-of-12 slds-text-align_center" data-label="Correspondence">
+                                <div title="Correspondence">
+                                    <a name={indexVar} data-id={item.Id} onclick={handleEmailDisplay} if:true={item.EmailMessages}>
+                                        <lightning-icon icon-name="utility:search" alternative-text="display"  size="small"></lightning-icon>
+                                    </a>
+                                </div>
+                            </td>
+                            <td class="slds-size_1-of-12" data-label="Case Reason">
+                                <div title="Case Reason">
+                                    <c-dynamic-picklist
+                                            unique-key={item.Id}
+                                            object-api-name="Case"
+                                            record-type-id="0120J000000R33JQAS"
+                                            selected-value={item.Reason}
+                                            pick-list-field-api-name="Reason"
+                                            variant="label-hidden"
+                                            onpicklistchange={handlePicklistChange}
+                                            name="Reason"
+                                            required>
+                                    </c-dynamic-picklist>
+                                </div>
+                            </td>
+                            <td class="slds-size_1-of-12" data-label="Priority">
+                                <div title="Priority">
+                                    <c-dynamic-picklist
+                                            unique-key={item.Id}
+                                            object-api-name="Case"
+                                            record-type-id="0120J000000R33JQAS"
+                                            selected-value={item.Priority}
+                                            pick-list-field-api-name="Priority"
+                                            variant="label-hidden"
+                                            onpicklistchange={handlePicklistChange}
+                                            name="Priority">
+                                    </c-dynamic-picklist>
+                                </div>
+                            </td>
+                            <td class="slds-size_1-of-12" data-label="Landlord or Resident">
+                                <div title="Landlord or Resident">
+                                    <c-dynamic-picklist
+                                            unique-key={item.Id}
+                                            object-api-name="Case"
+                                            record-type-id="0120J000000R33JQAS"
+                                            selected-value={item.Landlord_Resident__c}
+                                            pick-list-field-api-name="Landlord_Resident__c"
+                                            variant="label-hidden"
+                                            onpicklistchange={handlePicklistChange}
+                                            name="Landlord_Resident__c">
+                                    </c-dynamic-picklist>
+                                </div>
+                            </td>
+                            <td class="slds-size_1-of-12" data-label="Site">
+                                <div title="Site">
+                                    <c-dynamic-multi-lookup
+                                            unique-key={item.Id}
+                                            selection={item.InitialSelectionSite}
+                                            errors={errors}
+                                            onsearch={handleSearchSite}
+                                            onselectionchange={handleLookupSiteSelectionChange}
+                                            placeholder="Search Sites"
+                                            is-multi-entry={isMultiEntry}
+                                            new-record-options={newRecordOptions}
+                                            name={item.Id}>
+                                    </c-dynamic-multi-lookup>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="slds-p-around_x-small" if:true={isLoaded}>
+                <lightning-layout horizontal-align="space">
+                    <lightning-layout-item flexibility="auto">
+                        <lightning-button label="Previous" icon-name="utility:chevronleft" onclick={handlePreviousPage}>
+                        </lightning-button>
+                    </lightning-layout-item>
+                    <lightning-layout-item flexibility="auto">
+                        Page {page} of {totalPage}
+                    </lightning-layout-item>
+                    <lightning-layout-item flexibility="auto">
+                        <lightning-button label="Next" icon-name="utility:chevronright" icon-position="right"
+                                          onclick={handleNextPage}></lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+
+        </lightning-card>
+
+        <c-dynamic-modal
+                show-modal={showModal}
+                show-positive={showPositiveButton}
+                positive-button-label={positiveButtonLabel}
+                show-negative={showNegativeButton}
+                onpositive={closeModal}
+                onclose={closeModal}>
+            <div slot="header">
+                <h2 slot="header" id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Correspondance</h2>
+            </div>
+            <div slot="body">
+                <template for:each={emailMessages} for:item="email">
+                    <div key={email.Id} class="emailMessage">
+                        <lightning-layout multiple-rows=true>
+                            <lightning-layout-item size=6>
+                                <span class="colorBrand">{email.FromName}</span>
+                            </lightning-layout-item>
+                            <lightning-layout-item size=6 class="slds-text-align_right">
+                                <lightning-formatted-date-time value={email.CreatedDate} class="colorBrand" year="numeric" month="short" day="2-digit"
+                                                               hour="2-digit" minute="2-digit">
+                                </lightning-formatted-date-time>
+                            </lightning-layout-item>
+                            <lightning-layout-item size=12>
+                                <span class="colorBrand">To: </span><span>{email.ToAddress}</span>
+                                <span if:true={email.CcAddress}>, </span><span if:true={email.CcAddress} class="colorBrand">Cc: </span><span if:true={email.CcAddress}>{email.CcAddress}</span>
+                                <span if:true={email.BccAddress}>, </span><span if:true={email.BccAddress} class="colorBrand">Bcc: </span><span if:true={email.BccAddress}>{email.BccAddress}</span>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                        <div class="slds-p-around_medium">
+                            <lightning-formatted-rich-text value={email.HtmlBody}></lightning-formatted-rich-text>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </c-dynamic-modal>
+
+    </div>
+
+</template>
